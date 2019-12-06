@@ -3,10 +3,12 @@ package com.rejak.springsecurityexamples.user.usecase;
 import com.rejak.springsecurityexamples.user.dao.Users;
 import com.rejak.springsecurityexamples.user.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UsersUseCaseImpl implements UsersUseCase {
 
     @Autowired
