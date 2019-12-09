@@ -25,6 +25,7 @@ deploy-heroku:
   image: ruby:2.4
   stage: deploy
   script:
+    - gem install dpl
     - dpl --provider=heroku --app=$HEROKU_APPNAME --api-key=$HEROKU_APIKEY
   only:
     - master
