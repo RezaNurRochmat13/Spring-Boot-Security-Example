@@ -1,0 +1,29 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  MAVEN_CLI_OPTS: "-DskipTests"
+
+cache:
+  paths:
+    - .m2/repository
+
+packaging-apps:
+  stage: build
+  script:
+    - 'mvn $MAVEN_CLI_OPTS package'
+  artifacts:
+    paths:
+      - target/*.jar
+  only:
+    - master
+
+deploy-heroku:
+  # Use stage test here, so the pages job may later pickup the created site.
+  image: ruby:2.4
+  stage: deploy
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APPNAME --api-key=$HEROKU_APIKEY
+  only:
+    - master
