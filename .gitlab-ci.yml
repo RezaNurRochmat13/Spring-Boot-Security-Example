@@ -2,18 +2,19 @@ stages:
   - build
   - deploy
 
-variables:
-  MAVEN_CLI_OPTS: "-DskipTests"
-
 cache:
   paths:
-    - .m2/repository
+    - .m2/
+
+variables:
+  MAVEN_CLI_OPTS: "-Dmaven.repo.local=.m2"
 
 packaging-apps:
   image: maven:3-jdk-10
   stage: build
   script:
-    - 'mvn $MAVEN_CLI_OPTS package'
+    - mvn clean install
+    - mvn package
   artifacts:
     paths:
       - target/*.jar
