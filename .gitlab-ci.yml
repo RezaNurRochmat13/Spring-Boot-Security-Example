@@ -5,6 +5,7 @@ stages:
 cache:
   paths:
     - .m2/repository
+
 variables:
   MAVEN_CLI_OPTS: "-DskipTests"
 
@@ -20,7 +21,6 @@ packaging-apps:
     - master
 
 deploy-heroku:
-  # Use stage test here, so the pages job may later pickup the created site.
   image: ruby:2.4
   stage: deploy
   script:

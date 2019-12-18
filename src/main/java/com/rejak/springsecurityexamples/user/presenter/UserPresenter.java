@@ -1,7 +1,7 @@
 package com.rejak.springsecurityexamples.user.presenter;
 
 import com.rejak.springsecurityexamples.user.dao.Users;
-import com.rejak.springsecurityexamples.user.exception.ResourceNotFound;
+import com.rejak.springsecurityexamples.exception.ResourceNotFound;
 import com.rejak.springsecurityexamples.user.usecase.UsersUseCaseImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
