@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UsersUseCase {
     List<Users> findAllUsers();
+    Long countAllUsers();
     Optional<Users> findUserById(Integer id);
     Users createNewUser(Users payload);
     Users updateUser(Users payload);

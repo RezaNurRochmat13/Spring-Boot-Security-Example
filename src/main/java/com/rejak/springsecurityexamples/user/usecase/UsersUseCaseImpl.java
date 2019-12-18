@@ -20,6 +20,11 @@ public class UsersUseCaseImpl implements UsersUseCase {
     }
 
     @Override
+    public Long countAllUsers() {
+        return usersRepository.count();
+    }
+
+    @Override
     public Optional<Users> findUserById(Integer id) {
         return usersRepository.findById(id);
     }
