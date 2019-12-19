@@ -5,9 +5,12 @@ import com.rejak.springsecurityexamples.role.dao.RoleDao;
 import com.rejak.springsecurityexamples.role.usecase.RoleUseCaseImpl;
 import com.rejak.springsecurityexamples.user.dao.Users;
 import com.rejak.springsecurityexamples.exception.ResourceNotFound;
+import com.rejak.springsecurityexamples.user.dao.dto.CreateUserDto;
 import com.rejak.springsecurityexamples.user.dao.dto.DetailUserDto;
 import com.rejak.springsecurityexamples.user.dao.dto.ListUserDto;
+import com.rejak.springsecurityexamples.user.dao.dto.UpdateUserDto;
 import com.rejak.springsecurityexamples.user.usecase.UsersUseCaseImpl;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,34 +54,29 @@ public class UserPresenter {
     }
 
     @PostMapping("user/role/{role_id}")
-    public Map<String, Object> createNewUser(@Valid @RequestBody Users users,
+    public Map<String, Object> createNewUser(@Valid @RequestBody CreateUserDto createUserDtoPayload,
                                              @PathVariable Integer role_id) {
         Map<String, Object> map = new HashMap<>();
         RoleDao roleDao = roleUseCase.findRoleById(role_id)
                 .orElseThrow(() -> new ResourceNotFound("Role not found with id : " + role_id));
 
-        users.setUserRole(roleDao);
-        usersUseCase.createNewUser(users);
+        Users mapperToUserEntity = mapperToCreateUserDto(createUserDtoPayload, roleDao);
 
         map.put("message", "User created successfully");
-        map.put("created_user", users);
+        map.put("created_user", createUserDtoPayload);
         return map;
     }
 
     @PutMapping("user/{id}")
-    public Map<String, Object> updateUser(@Valid @RequestBody Users users,
+    public Map<String, Object> updateUser(@Valid @RequestBody UpdateUserDto updateUserDtoPayload,
                                           @PathVariable Integer id) {
         Map<String, Object> map = new HashMap<>();
-        Users findUserById = usersUseCase.findUserById(id)
-                .orElseThrow(() -> new ResourceNotFound("User not found with id :" + id));
+        Optional<Users> findUserById = Optional.ofNullable(usersUseCase.findUserById(id)
+                .orElseThrow(() -> new ResourceNotFound("User not found with id :" + id)));
 
-        findUserById.setUserName(users.getUserName());
-        findUserById.setUserAge(users.getUserAge());
-        findUserById.setUserAddress(users.getUserAddress());
-        usersUseCase.updateUser(findUserById);
-
+        Users updateUsers = mapperToUpdateUserDto(updateUserDtoPayload, findUserById);
         map.put("message", "Users updated successfully");
-        map.put("updated_user", users);
+        map.put("updated_user", updateUserDtoPayload);
         return map;
 
     }
@@ -88,8 +86,8 @@ public class UserPresenter {
         Map<String, Object> map = new HashMap<>();
         Users findUserById = usersUseCase.findUserById(id)
                 .orElseThrow(() -> new ResourceNotFound("User not found with id : " + id));
-        usersUseCase.deleteUser(findUserById);
 
+        usersUseCase.deleteUser(findUserById);
         map.put("message", "User deleted successfully");
         map.put("deleted_user", findUserById);
         return map;
@@ -125,5 +123,36 @@ public class UserPresenter {
 
         });
         return detailUserDto;
+    }
+
+    // Mapper CreateUserDto to Entity User
+    private Users mapperToCreateUserDto(CreateUserDto createUserDtoPayload, RoleDao roleDao) {
+        Users mapperToEntity = modelMapperConfig.modelMapper().map(createUserDtoPayload, Users.class);
+
+        mapperToEntity.setUserName(createUserDtoPayload.getUserName());
+        mapperToEntity.setUserAge(createUserDtoPayload.getUserAge());
+        mapperToEntity.setUserAddress(createUserDtoPayload.getUserAddress());
+        mapperToEntity.setUserRole(roleDao);
+        usersUseCase.createNewUser(mapperToEntity);
+
+        return mapperToEntity;
+    }
+
+    // Mapper UpdateUserDto to Entity User
+    private Users mapperToUpdateUserDto(UpdateUserDto updateUserDtoPayload,
+                                        Optional<Users> usersOptional) {
+        Users mapperUpdateUser = modelMapperConfig
+                                .modelMapper().map(updateUserDtoPayload, Users.class);
+
+        usersOptional.ifPresent(users -> {
+            mapperUpdateUser.setUserName(updateUserDtoPayload.getUserName());
+            mapperUpdateUser.setUserAge(updateUserDtoPayload.getUserAge());
+            mapperUpdateUser.setUserAddress(updateUserDtoPayload.getUserAddress());
+        });
+
+        usersUseCase.updateUser(mapperUpdateUser);
+
+        return mapperUpdateUser;
+
     }
 }
