@@ -1,16 +1,15 @@
 package com.rejak.springsecurityexamples.user.presenter;
 
+import com.rejak.springsecurityexamples.exception.ResourceNotFound;
 import com.rejak.springsecurityexamples.mapper.ModelMapperConfig;
 import com.rejak.springsecurityexamples.role.dao.RoleDao;
 import com.rejak.springsecurityexamples.role.usecase.RoleUseCaseImpl;
 import com.rejak.springsecurityexamples.user.dao.Users;
-import com.rejak.springsecurityexamples.exception.ResourceNotFound;
 import com.rejak.springsecurityexamples.user.dao.dto.CreateUserDto;
 import com.rejak.springsecurityexamples.user.dao.dto.DetailUserDto;
 import com.rejak.springsecurityexamples.user.dao.dto.ListUserDto;
 import com.rejak.springsecurityexamples.user.dao.dto.UpdateUserDto;
 import com.rejak.springsecurityexamples.user.usecase.UsersUseCaseImpl;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
