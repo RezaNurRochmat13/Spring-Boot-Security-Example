@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rejak.springsecurityexamples.user.dao.Users;
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

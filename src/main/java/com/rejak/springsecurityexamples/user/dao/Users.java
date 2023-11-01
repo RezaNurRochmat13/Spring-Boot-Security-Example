@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rejak.springsecurityexamples.role.dao.RoleDao;
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
